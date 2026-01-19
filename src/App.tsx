@@ -15,6 +15,9 @@ import Aggregators from "./pages/Aggregators";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
+// AUTH SYSTEM - Work in Progress
+// Adding authentication to protect routes
+
 const queryClient = new QueryClient();
 
 const App = () => (
