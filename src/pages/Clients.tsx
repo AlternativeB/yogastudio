@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/lib/supabase";
 import { AdminLayout } from "@/components/layout/AdminLayout";
 import { DataTable } from "@/components/ui/data-table";
 import { StatusBadge } from "@/components/ui/status-badge";
@@ -18,64 +19,61 @@ interface Client {
   subscriptionType: string;
 }
 
-const mockClients: Client[] = [
-  {
-    id: "1",
-    name: "Sarah Johnson",
-    email: "sarah@email.com",
-    phone: "+1 234-567-8901",
-    status: "active",
-    source: "Online",
-    registrationDate: "2024-01-15",
-    subscriptionType: "Unlimited Monthly",
-  },
-  {
-    id: "2",
-    name: "Michael Chen",
-    email: "michael@email.com",
-    phone: "+1 234-567-8902",
-    status: "active",
-    source: "Referral",
-    registrationDate: "2024-02-20",
-    subscriptionType: "10 Class Pack",
-  },
-  {
-    id: "3",
-    name: "Emma Wilson",
-    email: "emma@email.com",
-    phone: "+1 234-567-8903",
-    status: "frozen",
-    source: "Walk-in",
-    registrationDate: "2023-11-10",
-    subscriptionType: "Unlimited Monthly",
-  },
-  {
-    id: "4",
-    name: "James Brown",
-    email: "james@email.com",
-    phone: "+1 234-567-8904",
-    status: "active",
-    source: "Online",
-    registrationDate: "2024-03-05",
-    subscriptionType: "5 Class Pack",
-  },
-  {
-    id: "5",
-    name: "Olivia Davis",
-    email: "olivia@email.com",
-    phone: "+1 234-567-8905",
-    status: "archived",
-    source: "Trial",
-    registrationDate: "2023-09-20",
-    subscriptionType: "—",
-  },
-];
-
 const Clients = () => {
   const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredClients = mockClients.filter(
+  const [searchQuery, setSearchQuery] = useState("");
+  const [clients, setClients] = useState<Client[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  // 🔹 загрузка клиентов при открытии страницы
+  useEffect(() => {
+    const loadClients = async () => {
+      const { data, error } = await supabase
+        .from("clients")
+        .select("*")
+        .order("registrationDate", { ascending: false });
+
+      if (error) {
+        console.error("Load clients error:", error);
+        return;
+      }
+
+      setClients(data || []);
+    };
+
+    loadClients();
+  }, []);
+
+  // 🔹 добавление тестового клиента
+  const addTestClient = async () => {
+    setLoading(true);
+
+    const { error } = await supabase.from("clients").insert([
+      {
+        name: "Test Client",
+        email: `test${Date.now()}@mail.com`,
+        phone: "+123456789",
+        status: "active",
+        source: "Manual",
+        registrationDate: new Date().toISOString(),
+        subscriptionType: "Trial",
+      },
+    ]);
+
+    if (error) {
+      console.error("Insert error:", error);
+      setLoading(false);
+      return;
+    }
+
+    // обновляем список
+    const { data } = await supabase.from("clients").select("*");
+    setClients(data || []);
+    setLoading(false);
+  };
+
+  const filteredClients = clients.filter(
     (client) =>
       client.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       client.email.toLowerCase().includes(searchQuery.toLowerCase())
@@ -87,7 +85,7 @@ const Clients = () => {
       header: "Client",
       render: (client: Client) => (
         <div>
-          <p className="font-medium text-foreground">{client.name}</p>
+          <p className="font-medium">{client.name}</p>
           <p className="text-sm text-muted-foreground">{client.email}</p>
         </div>
       ),
@@ -95,9 +93,7 @@ const Clients = () => {
     {
       key: "phone",
       header: "Phone",
-      render: (client: Client) => (
-        <span className="text-sm text-foreground">{client.phone}</span>
-      ),
+      render: (client: Client) => <span>{client.phone}</span>,
     },
     {
       key: "status",
@@ -107,22 +103,20 @@ const Clients = () => {
     {
       key: "subscriptionType",
       header: "Subscription",
-      render: (client: Client) => (
-        <span className="text-sm text-foreground">{client.subscriptionType}</span>
-      ),
+      render: (client: Client) => <span>{client.subscriptionType}</span>,
     },
     {
       key: "source",
       header: "Source",
       render: (client: Client) => (
-        <span className="text-sm text-muted-foreground">{client.source}</span>
+        <span className="text-muted-foreground">{client.source}</span>
       ),
     },
     {
       key: "registrationDate",
       header: "Joined",
       render: (client: Client) => (
-        <span className="text-sm text-muted-foreground">
+        <span className="text-muted-foreground">
           {new Date(client.registrationDate).toLocaleDateString()}
         </span>
       ),
@@ -139,9 +133,14 @@ const Clients = () => {
             Manage your studio members and their profiles.
           </p>
         </div>
-        <Button className="gap-2">
+
+        <Button
+          className="gap-2"
+          onClick={addTestClient}
+          disabled={loading}
+        >
           <Plus className="w-4 h-4" />
-          Add Client
+          {loading ? "Adding..." : "Add Client"}
         </Button>
       </div>
 
@@ -156,6 +155,7 @@ const Clients = () => {
             className="pl-10"
           />
         </div>
+
         <Button variant="outline" className="gap-2">
           <Filter className="w-4 h-4" />
           Filters
@@ -174,3 +174,4 @@ const Clients = () => {
 };
 
 export default Clients;
+
