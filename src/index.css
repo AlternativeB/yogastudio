@@ -1,0 +1,218 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&display=swap');
+
+@layer base {
+  :root {
+    /* Warm, calming yoga studio palette */
+    --background: 40 30% 97%;
+    --foreground: 220 20% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 20% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 20% 15%;
+
+    /* Sage green primary */
+    --primary: 150 25% 35%;
+    --primary-foreground: 40 30% 97%;
+
+    /* Warm cream secondary */
+    --secondary: 35 40% 92%;
+    --secondary-foreground: 220 20% 20%;
+
+    --muted: 40 20% 94%;
+    --muted-foreground: 220 10% 45%;
+
+    /* Terracotta accent */
+    --accent: 18 60% 55%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Soft sage success */
+    --success: 150 40% 45%;
+    --success-foreground: 0 0% 100%;
+
+    /* Warm amber warning */
+    --warning: 38 92% 50%;
+    --warning-foreground: 220 20% 15%;
+
+    --border: 40 20% 88%;
+    --input: 40 20% 88%;
+    --ring: 150 25% 35%;
+
+    --radius: 0.75rem;
+
+    /* Sidebar - slightly darker cream */
+    --sidebar-background: 35 30% 95%;
+    --sidebar-foreground: 220 20% 25%;
+    --sidebar-primary: 150 25% 35%;
+    --sidebar-primary-foreground: 40 30% 97%;
+    --sidebar-accent: 35 40% 90%;
+    --sidebar-accent-foreground: 220 20% 20%;
+    --sidebar-border: 40 20% 85%;
+    --sidebar-ring: 150 25% 35%;
+
+    /* Custom gradients */
+    --gradient-sage: linear-gradient(135deg, hsl(150 25% 35%) 0%, hsl(160 30% 40%) 100%);
+    --gradient-warm: linear-gradient(135deg, hsl(35 40% 92%) 0%, hsl(40 30% 97%) 100%);
+    --gradient-terracotta: linear-gradient(135deg, hsl(18 60% 55%) 0%, hsl(25 55% 50%) 100%);
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 hsl(220 20% 15% / 0.03);
+    --shadow-md: 0 4px 6px -1px hsl(220 20% 15% / 0.05), 0 2px 4px -2px hsl(220 20% 15% / 0.03);
+    --shadow-lg: 0 10px 15px -3px hsl(220 20% 15% / 0.05), 0 4px 6px -4px hsl(220 20% 15% / 0.03);
+    --shadow-card: 0 1px 3px 0 hsl(220 20% 15% / 0.04), 0 1px 2px -1px hsl(220 20% 15% / 0.04);
+  }
+
+  .dark {
+    --background: 220 20% 10%;
+    --foreground: 40 30% 95%;
+
+    --card: 220 20% 13%;
+    --card-foreground: 40 30% 95%;
+
+    --popover: 220 20% 13%;
+    --popover-foreground: 40 30% 95%;
+
+    --primary: 150 30% 50%;
+    --primary-foreground: 220 20% 10%;
+
+    --secondary: 220 15% 20%;
+    --secondary-foreground: 40 30% 95%;
+
+    --muted: 220 15% 18%;
+    --muted-foreground: 40 20% 60%;
+
+    --accent: 18 50% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 62% 45%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 150 35% 40%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 80% 45%;
+    --warning-foreground: 220 20% 10%;
+
+    --border: 220 15% 22%;
+    --input: 220 15% 22%;
+    --ring: 150 30% 50%;
+
+    --sidebar-background: 220 20% 8%;
+    --sidebar-foreground: 40 30% 90%;
+    --sidebar-primary: 150 30% 50%;
+    --sidebar-primary-foreground: 220 20% 10%;
+    --sidebar-accent: 220 15% 15%;
+    --sidebar-accent-foreground: 40 30% 95%;
+    --sidebar-border: 220 15% 18%;
+    --sidebar-ring: 150 30% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'DM Sans', system-ui, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Fraunces', Georgia, serif;
+    @apply font-medium tracking-tight;
+  }
+}
+
+@layer components {
+  .stat-card {
+    @apply bg-card rounded-xl p-6 shadow-card border border-border/50 transition-all duration-200 hover:shadow-md;
+  }
+
+  .stat-value {
+    @apply text-3xl font-semibold text-foreground;
+    font-family: 'DM Sans', system-ui, sans-serif;
+  }
+
+  .stat-label {
+    @apply text-sm text-muted-foreground mt-1;
+  }
+
+  .nav-item {
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-lg text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-all duration-150;
+  }
+
+  .nav-item-active {
+    @apply bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground;
+  }
+
+  .table-header {
+    @apply text-xs font-medium text-muted-foreground uppercase tracking-wider;
+  }
+
+  .status-badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .status-active {
+    @apply bg-success/10 text-success;
+  }
+
+  .status-frozen {
+    @apply bg-warning/10 text-warning;
+  }
+
+  .status-archived {
+    @apply bg-muted text-muted-foreground;
+  }
+
+  .page-header {
+    @apply flex items-center justify-between mb-8;
+  }
+
+  .page-title {
+    @apply text-2xl font-medium text-foreground;
+  }
+
+  .section-title {
+    @apply text-lg font-medium text-foreground mb-4;
+  }
+}
+
+@layer utilities {
+  .gradient-sage {
+    background: var(--gradient-sage);
+  }
+
+  .gradient-warm {
+    background: var(--gradient-warm);
+  }
+
+  .gradient-terracotta {
+    background: var(--gradient-terracotta);
+  }
+
+  .shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+
+  .shadow-sm-custom {
+    box-shadow: var(--shadow-sm);
+  }
+
+  .shadow-md-custom {
+    box-shadow: var(--shadow-md);
+  }
+
+  .shadow-lg-custom {
+    box-shadow: var(--shadow-lg);
+  }
+}
